@@ -1,17 +1,17 @@
 #include "Cell.h" 
 
-// Constructor
+// CONSTRUCTOR
 Cell::Cell()
     : cell_number{0}{
         
     }
 
-// Destructor
+// DESTRUCTOR
 Cell::~Cell(){
 }
 
-// Get Methods
+// GET METHODS
 
-// Set Methods
+// SET METHODS 
 
-// Other Methods
+// OTHER METHODS

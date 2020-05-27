@@ -23,21 +23,21 @@
 
 class Glider {
 private:
-    //Identifiers
+    // IDENTIFIERS
     std::string name;
 
-    //Components
+    // COMPONENTS
 public:
-// Constructor
+// CONSTRUCTOR
 Glider(std::string glider_file_name);
-// Destructor
+// DESTRUCTOR
 ~Glider();
 
-// Get Methods
+// GET METHODS
 
-// Set Methods 
+// SET METHODS 
 
-// Other Methods
+// OTHER METHODS
 };
 
 #endif

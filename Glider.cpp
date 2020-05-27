@@ -2,10 +2,10 @@
 
 // Constructor
 Glider::Glider(std::string glider_file_name) {
-    // Name the Glider
+    // NAME THE GLIDER
     name = glider_file_name;
     
-    //Open, read, and copy the Gliderplan File - Algorithm accounts for Gliderplan's standard output format
+    // OPEN, READ, AND COPY THE GLIDERPLAN FILE - ALGORITHM ACCOUNTS FOR GLIDERPLAN'S STANDARD OUTPUT FORMAT
     std::ifstream in_file;
     in_file.open(name);
     if (!in_file) {
@@ -40,12 +40,12 @@ Glider::Glider(std::string glider_file_name) {
     in_file.close(); //This is throwing such an annoying intellisense error on VSCODE...
 }
 
-// Destructor
+// DESTRUCTOR
 Glider::~Glider(){
 }
 
-// Get Methods
+// GET METHODS
 
-// Set Methods
+// SET METHODS
 
-// Other Methods
+// OTHER METHODS

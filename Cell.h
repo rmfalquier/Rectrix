@@ -13,16 +13,16 @@ private:
     // double local_cg;
     // double local_c;
 public:
-// Constructor
+// CONSTRUCTOR
 Cell();
-// Destructor
+// DESTRUCTOR
 ~Cell();
 
-// Get Methods
+// GET METHODS
 
-// Set Methods 
+// SET METHODS 
 
-// Other Methods
+// OTHER METHODS
 };
 
 #endif
