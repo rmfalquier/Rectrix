@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------------//
 // GLIDER CLASS
-// A Glider class is a data structure comprised of a canopy, line gallery, and payload.
+// A Glider class is a data structure comprised of a canopy, line gallery, and payload,
 // which are three separate data structures. It is constructed by supplying the name of 
 // the data file that (in string format) that contains the GliderPlan output *.txt file 
 // with the 3D data for the glider. The class' constructor will extract it and calculate 
