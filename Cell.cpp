@@ -1,9 +1,8 @@
 #include "Cell.h" 
 
 // CONSTRUCTOR
-Cell::Cell()
-    : cell_number{0}{
-        
+Cell::Cell(int profile_number, std::vector<std::vector<double>> airfoil_coords)
+    : cell_number{profile_number}, coords{airfoil_coords} {
     }
 
 // DESTRUCTOR
