@@ -28,6 +28,7 @@ Glider::Glider(std::string glider_file_name) {
 
         // GLIDERPLAN FILE READING LOOP
         // TODO: Need to add a bridle reading section here that reads line data into a single line and adds to container for line gallery
+        // TODO: There's for sure a cleaner way to implement the logic on this loop, especially with regard to rotation for the center cell. 
         while (std::getline(in_file, line)) {
             // CHECK FOR DIFFERENT FILE SECTIONS AND FLAG THEM WITH BOOLEAN GOVERNORS TO
             // READ DATA BASED ON THE CURRENTLY FLAGGED GOVERNORS 
