@@ -10,13 +10,15 @@
 #include <iostream>
 #include <vector>
 
+#include <armadillo>
+
 class Cell {
 private:
     // IDENTIFIERS
     int cell_number;
 
     // COMPONENTS
-    std::vector<std::vector<double>> coords; //Vector of XYZ-Coordinate Vectors describing the Cell
+    arma::mat coords; //XYZ-Coordinate Matrix describing the Cell where x, y, and z coordinates are each in a row
     // double ang_inc;
     // double ang_sweep;
     // std::vector<double> pos;
@@ -24,7 +26,7 @@ private:
     // double local_c;
 public:
     // CONSTRUCTOR
-    Cell(int profile_number, std::vector<std::vector<double>> airfoil_coords);
+    Cell(int profile_number, arma::mat airfoil_coords);
 
     // DESTRUCTOR
     ~Cell();

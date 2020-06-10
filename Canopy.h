@@ -11,6 +11,8 @@
 
 #include <vector>
 
+#include <armadillo>
+
 class Canopy {
 private:
     // IDENTIFIERS

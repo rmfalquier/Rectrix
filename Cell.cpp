@@ -1,7 +1,7 @@
 #include "Cell.h" 
 
 // CONSTRUCTOR
-Cell::Cell(int profile_number, std::vector<std::vector<double>> airfoil_coords)
+Cell::Cell(int profile_number, arma::mat airfoil_coords)
     : cell_number{profile_number}, coords{airfoil_coords} {
     }
 

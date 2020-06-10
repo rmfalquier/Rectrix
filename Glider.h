@@ -23,6 +23,8 @@
 #include <string>
 #include <vector>
 
+#include <armadillo>
+
 class Glider {
 private:
     // IDENTIFIERS
