@@ -46,7 +46,7 @@ public:
 
 
     // OTHER METHODS
-
+    void gnu_print();
 
 };
 

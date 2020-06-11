@@ -3,7 +3,6 @@
 // CONSTRUCTOR
 Canopy::Canopy(std::vector<Cell> canopy_cells) 
     : cells{canopy_cells}{
-    std::cout << "Apparent Success in creation of canopy with " << cells.size() << " cells." << std::endl; 
 }
 
 // DESTRUCTOR
@@ -11,7 +10,9 @@ Canopy::~Canopy(){
 }
 
 // GET METHODS
-
+std::vector<Cell> Canopy::get_cells(){
+    return cells;
+}
 
 // SET METHODS
 

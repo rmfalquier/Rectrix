@@ -18,7 +18,7 @@ private:
     int cell_number;
 
     // COMPONENTS
-    arma::mat coords; //XYZ-Coordinate Matrix describing the Cell where x, y, and z coordinates are each in a row
+    arma::mat coords; //XYZ-Coordinate Matrix for cell coordinates - x, y, and z coordinates each in a row
     // double ang_inc;
     // double ang_sweep;
     // std::vector<double> pos;
@@ -32,7 +32,7 @@ public:
     ~Cell();
 
     // GET METHODS
-
+    arma::mat get_coords();
 
     // SET METHODS 
 

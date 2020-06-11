@@ -98,3 +98,27 @@ Glider::~Glider(){
 
 // OTHER METHODS
 // TODO: Print data to a file, start early to perform comparisons / diagnostics
+// TODO: Make modifications for const 
+// TODO: Format for cleaner output
+void Glider::gnu_print(){
+    //Print Cell File
+    std::ofstream cell_file{"./.output/cells.rctx"};
+    if (!cell_file) {
+        std::cerr << "Error creating cell file" << std::endl;
+    }else{
+        std::vector<Cell> cells{canopy_ptr->get_cells()};
+        for (auto current_cell:cells){
+            arma::mat current_coords{current_cell.get_coords()};
+            for(int i = 0; i<current_coords.n_cols; i++){
+                cell_file << current_coords(0,i)
+                          << " " 
+                          << current_coords(1,i) 
+                          << " " 
+                          << current_coords(2,i) 
+                          << std::endl;
+            // cell_file << line << std::endl;
+            }
+            cell_file << std::endl;
+        }
+    }
+}
