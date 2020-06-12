@@ -7,8 +7,8 @@
 #ifndef _Cell_H_
 #define _Cell_H_
 
-#include <iostream>
-#include <vector>
+// #include <iostream>
+// #include <vector>
 
 #include <armadillo>
 

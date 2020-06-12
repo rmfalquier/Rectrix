@@ -1,33 +1,34 @@
 //------------------------------------------------------------------------------------//
-// CANOPY CLASS
+// GALLERY CLASS
 // A:
 //  -Name: 
 //------------------------------------------------------------------------------------//
 
-#ifndef _CANOPY_H_
-#define _CANOPY_H_
+#ifndef _GALLERY_H_
+#define _GALLERY_H_
 
-#include "Cell.h"
+#include "Pgline.h"
 
+#include <iostream>
 #include <vector>
 
 // #include <armadillo>
 
-class Canopy {
+class Gallery {
 private:
     // IDENTIFIERS
 
     // COMPONENTS
-    std::vector<Cell> cells;
+    std::vector<Pgline> lines;
 public:
-    // CONSTRUCTORS
-    Canopy(std::vector<Cell> canopy_cells);
+    // CONSTRUCTOR
+    Gallery(std::vector<Pgline> gallery_lines);
 
     // DESTRUCTOR
-    ~Canopy();
+    ~Gallery();
 
     // GET METHODS
-    std::vector<Cell> get_cells();
+    std::vector<Pgline> get_lines();
 
     // SET METHODS 
 

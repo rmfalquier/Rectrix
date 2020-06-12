@@ -16,4 +16,5 @@ arma::mat Cell::get_coords(){
 
 // SET METHODS 
 
+
 // OTHER METHODS

@@ -10,4 +10,4 @@
 # set view 45,50
 # splot cos(u)*cos(v),cos(u)*sin(v),sin(u)
 
-splot ".output/cells.rctx" using 1:2:3 w lines
+splot ".output/canopy.rctx" using 1:2:3 w lines, ".output/gallery.rctx" using 1:2:3 w lines

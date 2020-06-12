@@ -6,6 +6,7 @@ Glider::Glider(std::string glider_file_name) {
     name = glider_file_name;
     
     // OPEN AND READ GLIDERPLAN FILE TO INITIALIZE GLIDER DATA STRUCTURE IN GIVEN FORMAT
+    // TODO: MOVE ALL THIS TO A FUNCTION
     std::ifstream in_file;
     in_file.open(name);
     if (!in_file) {
@@ -19,17 +20,16 @@ Glider::Glider(std::string glider_file_name) {
         // BOOLEAN GOVERNORS FOR READ CASES
         bool new_cell {false};
         bool bridle_found {false};
-        bool profile_section {true};
 
-        // CANOPY SUB-CLASS RELATED VECTORS AND COUNTERS
+        // CANOPY SUB-CLASS RELATED VARIABLES
         int profile_number {1}; // Gliderplan starts counting at 1
         arma::mat airfoil_coords(3,0);
         std::vector<Cell> canopy_cells;
 
+        // LINE GALLERY SUB-CLASS RELATED VARIABLES
+        std::vector<Pgline> gallery_lines;
+
         // GLIDERPLAN FILE READING LOOP:
-        // CHECK FOR DIFFERENT FILE SECTIONS AND FLAG THEM WITH BOOLEAN GOVERNORS TO
-        // READ DATA BASED ON THE CURRENTLY FLAGGED GOVERNORS 
-        // TODO: Need to add a bridle reading section here that reads line data into a single line and adds to container for line gallery
         // TODO: There's for sure a cleaner way to implement the logic on this loop, especially with regard to rotation for the center cell. 
         while (std::getline(in_file, line)) {
             if(line.find("profile") != std::string::npos){
@@ -46,13 +46,12 @@ Glider::Glider(std::string glider_file_name) {
             }else if(line.find("bridle") != std::string::npos){
                 // MODIFY BOOLEANS ACCORDINGLY
                 bridle_found = true;
-                profile_section = false;
 
                 // CREATE LAST CELL WITH AIRFOIL PROFILE COORDINATES AND ADD TO CELL VECTOR
                 Cell temp_cell {profile_number, airfoil_coords};
                 canopy_cells.push_back(temp_cell);
 
-            }else if(profile_section && !line.empty()){
+            }else if(!bridle_found && !line.empty()){
                 // MODIFY BOOLEANS AND CONTAINER ACCORDINGLY
                 if(new_cell){
                     airfoil_coords.clear();
@@ -69,20 +68,52 @@ Glider::Glider(std::string glider_file_name) {
                              >> airfoil_coords(2,airfoil_coords.n_cols-1) 
                              >> airfoil_coords(0,airfoil_coords.n_cols-1);
 
-            }else if (bridle_found) {
-                // std::cout << "We hit the bridle section on line: " << line_counter << std::endl; 
-            
+            }else if (bridle_found && !line.empty()) {
+                // ! WARNING - BRIDLE CURRENTLY DOES NOT READ THE LAST TWO ENTRIES AFTER MATERIAL
+                // CREATE TEMPORARY STORAGE AND STREAM FOR COORDINATES
+                std::istringstream coord_stream {line};
+                std::string temp_line_id {};
+                arma::mat temp_line_coords(3,2);
+                std::string temp_line_material {};
+
+                // READ COORDINATES FROM STREAM, AND PUT IN TEMPORARY STORAGE
+                coord_stream >> temp_line_id
+                             >> temp_line_coords(1,0) 
+                             >> temp_line_coords(2,0) 
+                             >> temp_line_coords(0,0) 
+                             >> temp_line_coords(1,1) 
+                             >> temp_line_coords(2,1) 
+                             >> temp_line_coords(0,1)
+                             >> temp_line_material;
+
+                // EDIT INPUTS FOR COMPATIBILITY
+                temp_line_id.erase(std::find(temp_line_id.begin(), temp_line_id.end(), '\"'));
+                temp_line_id.erase(std::find(temp_line_id.begin(), temp_line_id.end(), '\"'));
+                
+                if(temp_line_material.back()=='\"'){
+                    temp_line_material.erase(std::find(temp_line_material.begin(), temp_line_material.end(), '\"'));
+                    temp_line_material.erase(std::find(temp_line_material.begin(), temp_line_material.end(), '\"'));
+                }else{
+                    temp_line_material.erase(std::find(temp_line_material.begin(), temp_line_material.end(), '\"'));
+                }
+                if(temp_line_material.size()==0){
+                    temp_line_material = "NA";
+                }
+
+                // CREATE NEW LINE AND ADD TO LINE VECTOR
+                Pgline temp_line {temp_line_id, temp_line_coords, temp_line_material};
+                gallery_lines.push_back(temp_line);
             }else if (line.empty()){
-                // std::cout << "The following line number is empty: " << line_counter << std::endl; 
+                // DO NOTHING
             }
-            
+
             // DIAGNOSTICS VARIABLE UPDATES
             ++line_counter;
         }
         
         // INITIALIZE AND LINK SUB-CLASSES
         canopy_ptr = std::make_unique<Canopy>(canopy_cells);
-        // TODO: Initialize Line Gallery
+        gallery_ptr = std::make_unique<Gallery>(gallery_lines); 
         // TODO: Initialize Payload
     }
     in_file.close(); //This someimtes throws a super annoying intellisense error on VSCODE...
@@ -101,24 +132,50 @@ Glider::~Glider(){
 // TODO: Make modifications for const 
 // TODO: Format for cleaner output
 void Glider::gnu_print(){
-    //Print Cell File
-    std::ofstream cell_file{"./.output/cells.rctx"};
-    if (!cell_file) {
-        std::cerr << "Error creating cell file" << std::endl;
+    //Print Canopy File
+    std::ofstream canopy_file{"./.output/canopy.rctx"};
+    if (!canopy_file) {
+        std::cerr << "Error creating canopy file" << std::endl;
     }else{
         std::vector<Cell> cells{canopy_ptr->get_cells()};
         for (auto current_cell:cells){
             arma::mat current_coords{current_cell.get_coords()};
-            for(int i = 0; i<current_coords.n_cols; i++){
-                cell_file << current_coords(0,i)
+            for(long long unsigned int i = 0; i<current_coords.n_cols; i++){ //Try with an iterator
+                canopy_file << current_coords(0,i)
                           << " " 
                           << current_coords(1,i) 
                           << " " 
                           << current_coords(2,i) 
                           << std::endl;
-            // cell_file << line << std::endl;
             }
-            cell_file << std::endl;
+            canopy_file << "\n" << std::endl;
         }
     }
+    canopy_file.close();
+
+    // Print Gallery File
+    // TODO: Mirror
+    std::ofstream gallery_file{"./.output/gallery.rctx"};
+    if (!gallery_file) {
+        std::cerr << "Error creating gallery file" << std::endl;
+    }else{
+        std::vector<Pgline> lines{gallery_ptr->get_lines()};
+        for (auto current_line:lines){
+            arma::mat current_coords{current_line.get_coords()};
+            gallery_file << current_coords(0,0)
+                        << " " 
+                        << current_coords(1,0) 
+                        << " " 
+                        << current_coords(2,0) 
+                        << std::endl;
+            gallery_file << current_coords(0,1)
+                        << " " 
+                        << current_coords(1,1) 
+                        << " " 
+                        << current_coords(2,1) 
+                        << std::endl;
+            gallery_file << "\n" << std::endl;
+        }
+    }
+    gallery_file.close();
 }

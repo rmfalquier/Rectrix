@@ -9,6 +9,8 @@ int main(){
     // BUILD THE GLIDER FROM A GLIDERPLAN INPUT FILE
     std::string glider_file_name{"./.References/test_glider.txt"};
     Glider analysis_glider {glider_file_name};
+
+    // OUTPUT FILES FOR GNUPLOT
     analysis_glider.gnu_print();
 
     return 0;

@@ -14,6 +14,8 @@
 
 #include "Cell.h"
 #include "Canopy.h"
+#include "Pgline.h"
+#include "Gallery.h"
 
 #include <iostream>
 #include <fstream>
@@ -32,6 +34,7 @@ private:
 
     // COMPONENTS
     std::unique_ptr<Canopy> canopy_ptr;
+    std::unique_ptr<Gallery> gallery_ptr;
 public:
     // CONSTRUCTOR
     Glider(std::string glider_file_name);
