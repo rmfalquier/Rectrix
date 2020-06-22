@@ -27,7 +27,7 @@ public:
     ~Canopy();
 
     // GET METHODS
-    std::vector<Cell> get_cells();
+    std::vector<Cell> Get_Cells() const;
 
     // SET METHODS 
 

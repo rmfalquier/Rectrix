@@ -10,7 +10,7 @@ Cell::~Cell(){
 }
 
 // GET METHODS
-arma::mat Cell::get_coords(){
+arma::mat Cell::Get_Coords() const {
     return coords;
 }
 

@@ -32,7 +32,7 @@ public:
     ~Cell();
 
     // GET METHODS
-    arma::mat get_coords();
+    arma::mat Get_Coords() const;
 
     // SET METHODS 
 

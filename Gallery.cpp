@@ -10,7 +10,7 @@ Gallery::~Gallery(){
 }
 
 // GET METHODS
-std::vector<Pgline> Gallery::get_lines(){
+std::vector<Pgline> Gallery::Get_Lines() const {
     return lines;
 }
 

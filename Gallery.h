@@ -28,7 +28,7 @@ public:
     ~Gallery();
 
     // GET METHODS
-    std::vector<Pgline> get_lines();
+    std::vector<Pgline> Get_Lines() const;
 
     // SET METHODS 
 

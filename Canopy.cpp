@@ -10,7 +10,7 @@ Canopy::~Canopy(){
 }
 
 // GET METHODS
-std::vector<Cell> Canopy::get_cells(){
+std::vector<Cell> Canopy::Get_Cells() const {
     return cells;
 }
 

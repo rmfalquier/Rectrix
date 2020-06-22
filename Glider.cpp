@@ -3,14 +3,27 @@
 // CONSTRUCTOR AND ASSOCIATED METHODS
 Glider::Glider(std::string glider_file_name) {
     // NAME THE GLIDER
-    name = glider_file_name;
+    name = Extract_Glider_Name(glider_file_name);
     
-    // OPEN AND READ GLIDERPLAN FILE TO INITIALIZE GLIDER DATA STRUCTURE IN GIVEN FORMAT
-    // TODO: MOVE ALL THIS TO A FUNCTION
+    // CREATE POINTERS FOR NECCESSARY DATA, THEN OPEN AND READ GLIDERPLAN FILE TO INITIALIZE GLIDER DATA STRUCTURE IN GIVEN FORMAT
+    std::unique_ptr<std::vector<Pgline>> gallery_lines = std::make_unique<std::vector<Pgline>>();
+    std::unique_ptr<std::vector<Cell>> canopy_cells = std::make_unique<std::vector<Cell>>();
+    Read_Gliderplan(glider_file_name, canopy_cells, gallery_lines);
+    // TODO: Add coordinate system transfer to Read_Gliderplan
+
+    // INITIALIZE SUB-CLASSES WITH EXTRACTED DATA
+    canopy_ptr = std::make_unique<Canopy>(*canopy_cells);
+    gallery_ptr = std::make_unique<Gallery>(*gallery_lines); 
+    // TODO: Initialize Payload
+}
+
+void Glider::Read_Gliderplan(const std::string &glider_file_name, 
+                             std::unique_ptr<std::vector<Cell>> &canopy_cells, 
+                             std::unique_ptr<std::vector<Pgline>> &gallery_lines){
     std::ifstream in_file;
-    in_file.open(name);
+    in_file.open(glider_file_name);
     if (!in_file) {
-        std::cerr << "Problem opening glider file" << std::endl;
+        std::cerr << "Problem opening glider file: " << glider_file_name << std::endl;
     }
     else{
         // TEMPORARY STORAGE AND DIAGNOSTIC VARIABLES FOR FILE READING
@@ -24,10 +37,6 @@ Glider::Glider(std::string glider_file_name) {
         // CANOPY SUB-CLASS RELATED VARIABLES
         int profile_number {1}; // Gliderplan starts counting at 1
         arma::mat airfoil_coords(3,0);
-        std::vector<Cell> canopy_cells;
-
-        // LINE GALLERY SUB-CLASS RELATED VARIABLES
-        std::vector<Pgline> gallery_lines;
 
         // GLIDERPLAN FILE READING LOOP:
         // TODO: There's for sure a cleaner way to implement the logic on this loop, especially with regard to rotation for the center cell. 
@@ -39,7 +48,7 @@ Glider::Glider(std::string glider_file_name) {
                 // CREATE NEW CELL WITH AIRFOIL PROFILE COORDINATES AND ADD TO CELL VECTOR
                 if(!airfoil_coords.empty()){
                     Cell temp_cell {profile_number, airfoil_coords};
-                    canopy_cells.push_back(temp_cell);
+                    canopy_cells->push_back(temp_cell);
                     ++profile_number;
                 }
 
@@ -49,7 +58,7 @@ Glider::Glider(std::string glider_file_name) {
 
                 // CREATE LAST CELL WITH AIRFOIL PROFILE COORDINATES AND ADD TO CELL VECTOR
                 Cell temp_cell {profile_number, airfoil_coords};
-                canopy_cells.push_back(temp_cell);
+                canopy_cells->push_back(temp_cell);
 
             }else if(!bridle_found && !line.empty()){
                 // MODIFY BOOLEANS AND CONTAINER ACCORDINGLY
@@ -102,7 +111,7 @@ Glider::Glider(std::string glider_file_name) {
 
                 // CREATE NEW LINE AND ADD TO LINE VECTOR
                 Pgline temp_line {temp_line_id, temp_line_coords, temp_line_material};
-                gallery_lines.push_back(temp_line);
+                gallery_lines->push_back(temp_line);
             }else if (line.empty()){
                 // DO NOTHING
             }
@@ -111,12 +120,23 @@ Glider::Glider(std::string glider_file_name) {
             ++line_counter;
         }
         
-        // INITIALIZE AND LINK SUB-CLASSES
-        canopy_ptr = std::make_unique<Canopy>(canopy_cells);
-        gallery_ptr = std::make_unique<Gallery>(gallery_lines); 
-        // TODO: Initialize Payload
+        
     }
     in_file.close(); //This someimtes throws a super annoying intellisense error on VSCODE...
+}
+
+std::string Glider::Extract_Glider_Name(const std::string &glider_file_name){
+    std::string extracted_name {};
+    if(glider_file_name.find(".txt") != std::string::npos){
+        auto const pos1 = glider_file_name.find_last_of('/');
+        auto const pos2 = glider_file_name.find_last_of('.');
+        auto const count {pos2 - pos1 - 1};
+        extracted_name = glider_file_name.substr(pos1+1, count);
+    }else{
+        extracted_name = glider_file_name;
+    }
+    std::cout << extracted_name << std::endl; 
+    return extracted_name;
 }
 
 // DESTRUCTOR
@@ -127,17 +147,17 @@ Glider::~Glider(){
 
 // SET METHODS
 
-// OTHER METHODS
-// TODO: Make modifications for const 
-void Glider::gnu_print(){
+// DATA OUTPUT METHODS
+void Glider::GNU_Print() const {
     //Print Canopy File
-    std::ofstream canopy_file{"./.output/canopy.rctx"};
+    std::string canopy_file_name {"./.output/" + name + "_canopy.rctx"};
+    std::ofstream canopy_file{canopy_file_name};
     if (!canopy_file) {
         std::cerr << "Error creating canopy file" << std::endl;
     }else{
-        std::vector<Cell> cells{canopy_ptr->get_cells()};
-        for (auto current_cell:cells){
-            arma::mat current_coords{current_cell.get_coords()};
+        std::vector<Cell> cells{canopy_ptr->Get_Cells()};
+        for (const auto current_cell:cells){
+            arma::mat current_coords{current_cell.Get_Coords()};
             for(long long unsigned int i = 0; i<current_coords.n_cols; i++){ //Try with an iterator
                 canopy_file << current_coords(0,i)
                           << " " 
@@ -152,13 +172,14 @@ void Glider::gnu_print(){
     canopy_file.close();
 
     // Print Gallery File
-    std::ofstream gallery_file{"./.output/gallery.rctx"};
+    std::string gallery_file_name {"./.output/" + name + "_gallery.rctx"};
+    std::ofstream gallery_file{gallery_file_name};
     if (!gallery_file) {
         std::cerr << "Error creating gallery file" << std::endl;
     }else{
-        std::vector<Pgline> lines{gallery_ptr->get_lines()};
-        for (auto current_line:lines){
-            arma::mat current_coords{current_line.get_coords()};
+        std::vector<Pgline> lines{gallery_ptr->Get_Lines()};
+        for (const auto current_line:lines){
+            arma::mat current_coords{current_line.Get_Coords()};
             gallery_file << current_coords(0,0)
                         << " " 
                         << current_coords(1,0) 

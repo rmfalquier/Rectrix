@@ -35,6 +35,13 @@ private:
     // COMPONENTS
     std::unique_ptr<Canopy> canopy_ptr;
     std::unique_ptr<Gallery> gallery_ptr;
+
+    // CONSTRUCTOR ASSOCIATED FUNCTIONS
+    std::string Extract_Glider_Name(const std::string &glider_file_name);
+
+    void Read_Gliderplan(const std::string &glider_file_name, 
+                         std::unique_ptr<std::vector<Cell>> &canopy_cells, 
+                         std::unique_ptr<std::vector<Pgline>> &gallery_lines);
 public:
     // CONSTRUCTOR
     Glider(std::string glider_file_name);
@@ -48,8 +55,8 @@ public:
     // SET METHODS 
 
 
-    // OTHER METHODS
-    void gnu_print();
+    // DATA OUTPUT METHODS
+    void GNU_Print() const;
 
 };
 

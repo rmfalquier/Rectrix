@@ -9,7 +9,7 @@ Pgline::Pgline(std::string line_id, arma::mat line_coords, std::string line_mate
 Pgline::~Pgline(){}
 
 // GET METHODS
-arma::mat Pgline::get_coords(){
+arma::mat Pgline::Get_Coords() const {
     return coords;
 }
 
