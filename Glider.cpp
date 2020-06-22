@@ -1,6 +1,6 @@
 #include "Glider.h" 
 
-// Constructor
+// CONSTRUCTOR AND ASSOCIATED METHODS
 Glider::Glider(std::string glider_file_name) {
     // NAME THE GLIDER
     name = glider_file_name;
@@ -128,9 +128,7 @@ Glider::~Glider(){
 // SET METHODS
 
 // OTHER METHODS
-// TODO: Print data to a file, start early to perform comparisons / diagnostics
 // TODO: Make modifications for const 
-// TODO: Format for cleaner output
 void Glider::gnu_print(){
     //Print Canopy File
     std::ofstream canopy_file{"./.output/canopy.rctx"};
@@ -154,7 +152,6 @@ void Glider::gnu_print(){
     canopy_file.close();
 
     // Print Gallery File
-    // TODO: Mirror
     std::ofstream gallery_file{"./.output/gallery.rctx"};
     if (!gallery_file) {
         std::cerr << "Error creating gallery file" << std::endl;
@@ -171,6 +168,21 @@ void Glider::gnu_print(){
             gallery_file << current_coords(0,1)
                         << " " 
                         << current_coords(1,1) 
+                        << " " 
+                        << current_coords(2,1) 
+                        << std::endl;
+            gallery_file << "\n" << std::endl;
+
+            // Mirror Side
+            gallery_file << current_coords(0,0)
+                        << " " 
+                        << -current_coords(1,0) 
+                        << " " 
+                        << current_coords(2,0) 
+                        << std::endl;
+            gallery_file << current_coords(0,1)
+                        << " " 
+                        << -current_coords(1,1) 
                         << " " 
                         << current_coords(2,1) 
                         << std::endl;
