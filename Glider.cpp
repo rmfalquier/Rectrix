@@ -159,7 +159,7 @@ std::string Glider::Extract_Glider_Name(const std::string &glider_file_name){
     return extracted_name;
 }
 
-// TODO: VERIFY CENTER INCIDENCE ANGLE WITH MATLAB OR MANUALLY
+// TODO: VERIFY CENTER INCIDENCE ANGLE WITH MATLAB OR MANUALLY AND ADD ORIENTATION CHECKER!!!
 std::vector<double> Glider::LE_Origin_Translators(const std::string &glider_file_name){
     // EXTRACT THE DATA NECCESSARY TO TRANSLATE ALL TO LE BODY FIXED FoR
     std::vector<double> translators {};   
