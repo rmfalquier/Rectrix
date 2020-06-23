@@ -11,4 +11,5 @@
 # splot cos(u)*cos(v),cos(u)*sin(v),sin(u)
 
 set view equal xyz 
+set zrange [-10:0.5]
 splot ".output/test_glider_canopy.rctx" using 1:2:3 w lines, ".output/test_glider_gallery.rctx" using 1:2:3 w lines

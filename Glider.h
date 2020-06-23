@@ -21,6 +21,7 @@
 #include <fstream>
 #include <iomanip>
 #include <sstream>
+#include <cmath>
 
 #include <string>
 #include <vector>
@@ -36,12 +37,18 @@ private:
     std::unique_ptr<Canopy> canopy_ptr;
     std::unique_ptr<Gallery> gallery_ptr;
 
+    // MATH STUFF
+    // TODO: COME UP WITH A BETTER SOLUTION FOR THIS
+    double pi {3.141592653589793238462643383279502884};
+
     // CONSTRUCTOR ASSOCIATED FUNCTIONS
     std::string Extract_Glider_Name(const std::string &glider_file_name);
 
     void Read_Gliderplan(const std::string &glider_file_name, 
                          std::unique_ptr<std::vector<Cell>> &canopy_cells, 
                          std::unique_ptr<std::vector<Pgline>> &gallery_lines);
+
+    std::vector<double> LE_Origin_Translators(const std::string &glider_file_name);                         
 public:
     // CONSTRUCTOR
     Glider(std::string glider_file_name);

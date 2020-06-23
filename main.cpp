@@ -5,6 +5,7 @@
 
 #include <armadillo>
 
+// TODO: Find a good pi solution
 // TODO: Overload << operator to display glider data
 // TODO: Comments!
 
